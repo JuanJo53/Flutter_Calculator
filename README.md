@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # fluttercalculator
 
 Calculator app using flutter.
@@ -14,3 +15,7 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+=======
+# Flutter_Calculator
+Aplicación hecha con Flutter que tiene las operaciones básicas aritméticas y algunas otras operaciones y funciones más.
+>>>>>>> 696e5c3e01f50dc0b2810fa13165000a007a94b0
