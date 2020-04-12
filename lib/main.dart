@@ -33,6 +33,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   @override
   Widget build(BuildContext context) {
+    TextEditingController expArt = TextEditingController();
+    TextEditingController numReal = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -40,6 +42,23 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           children: <Widget>[
+            TextField(
+              controller: expArt,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 25.0,
+              ),
+              enabled: false,
+            ),
+            TextField(
+              controller: numReal,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 20.0,
+              ),
+              enabled: false,
+            ),
+            Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -76,8 +95,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 Digito('7'),
                 Digito('8'),
                 Digito('9'),
-                Digito('÷'),
-                Digito('9'),
+                funcionBasica('DEL'),
+                Digito('AC'),
               ],
             ),
             Row(
@@ -86,8 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 Digito('4'),
                 Digito('5'),
                 Digito('6'),
-                Digito('×'),
-                Digito(' '),
+                funcionBasica('×'),
+                Digito('÷'),
               ],
             ),
             Row(
@@ -96,8 +115,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 Digito('1'),
                 Digito('2'),
                 Digito('3'),
-                Digito('+'),
-                Digito(' '),
+                funcionBasica('+'),
+                Digito('-'),
               ],
             ),
             Row(
@@ -106,41 +125,58 @@ class _MyHomePageState extends State<MyHomePage> {
                 Digito('0'),
                 Digito('.'),
                 Digito(' '),
-                Digito('-'),
+                funcionBasica('Ans'),
                 Digito('='),
               ],
             )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
   Widget Digito(msg){
     return Container(
-      width:70,
+      width:72.0,
       color: Colors.black54,
+      child: FlatButton(
+          onPressed: (){
+            setState(() {
+
+            });
+          },
+          child: Text(msg,style: TextStyle(fontSize: 20.0,color: Colors.white),)
+      ),
+    );
+  }
+  Widget funcionBasica(msg){
+    return Container(
+      width:72.0,
+      decoration: BoxDecoration(
+        color: Colors.black54,
+        border: Border(
+          left: BorderSide(
+            color: Colors.white,
+            width: 2.0,
+          )
+        )
+      ),
       child: FlatButton(
           onPressed: (){
 
           },
-          child: Text(msg,style: TextStyle(fontSize: 40,color: Colors.white),)
+          child: Text(msg,style: TextStyle(fontSize: 20.0,color: Colors.white),)
       ),
     );
   }
   Widget funcionAvanzada(msg){
     return Container(
-      width: 70,
+      width: 72.0,
       color: Colors.cyan,
       child: FlatButton(
           onPressed: (){
 
           },
-          child: Text(msg,style: TextStyle(fontSize: 20,color: Colors.white),)
+          child: Text(msg,style: TextStyle(fontSize: 20.0,color: Colors.white),)
       ),
     );
   }
