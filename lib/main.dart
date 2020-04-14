@@ -24,17 +24,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int _parentesisA = 0;
+  int _parentesisC = 0;
+  String operacion="";
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  TextEditingController expArt = TextEditingController();
+  TextEditingController numReal = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    TextEditingController expArt = TextEditingController();
-    TextEditingController numReal = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -43,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: <Widget>[
             TextField(
-              controller: expArt,
+              controller: expArt=TextEditingController(text: operacion),
               textAlign: TextAlign.right,
               style: TextStyle(
                 fontSize: 25.0,
@@ -96,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Digito('8'),
                 Digito('9'),
                 funcionBasica('DEL'),
-                Digito('AC'),
+                funcionBasica('AC'),
               ],
             ),
             Row(
@@ -106,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Digito('5'),
                 Digito('6'),
                 funcionBasica('×'),
-                Digito('÷'),
+                funcionBasica('÷'),
               ],
             ),
             Row(
@@ -116,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Digito('2'),
                 Digito('3'),
                 funcionBasica('+'),
-                Digito('-'),
+                funcionBasica('-'),
               ],
             ),
             Row(
@@ -124,9 +121,9 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                 Digito('0'),
                 Digito('.'),
-                Digito(' '),
+                Digito(''),
                 funcionBasica('Ans'),
-                Digito('='),
+                funcionBasica('='),
               ],
             )
           ],
@@ -141,7 +138,8 @@ class _MyHomePageState extends State<MyHomePage> {
       child: FlatButton(
           onPressed: (){
             setState(() {
-
+              //TODO: Controlar el punto.
+              operacion+=msg;
             });
           },
           child: Text(msg,style: TextStyle(fontSize: 20.0,color: Colors.white),)
@@ -151,18 +149,22 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget funcionBasica(msg){
     return Container(
       width:72.0,
-      decoration: BoxDecoration(
-        color: Colors.black54,
-        border: Border(
-          left: BorderSide(
-            color: Colors.white,
-            width: 2.0,
-          )
-        )
-      ),
+      color: Colors.black54,
       child: FlatButton(
           onPressed: (){
-
+            setState(() {
+              if(msg=="AC"){
+                operacion="";
+              }else if(msg=='='){
+                solucionar();
+              }else if(msg=='Ans'){
+                asigAns();
+              }else if(msg=='DEL'){
+                borrarExp();
+              }else{
+                operacion+=msg;
+              }
+            });
           },
           child: Text(msg,style: TextStyle(fontSize: 20.0,color: Colors.white),)
       ),
@@ -174,10 +176,31 @@ class _MyHomePageState extends State<MyHomePage> {
       color: Colors.cyan,
       child: FlatButton(
           onPressed: (){
+            setState(() {
+              if (msg=='sin'||msg=='cos'||msg=='tan'||msg=='log'||msg=='ln'||msg=='√'){
+                  operacion+=msg+"(";
+                  _parentesisA++;
+              }else if(msg=='INV'){
 
+              }else{
+                operacion+=msg;
+              }
+            });
           },
           child: Text(msg,style: TextStyle(fontSize: 20.0,color: Colors.white),)
       ),
     );
   }
+  void solucionar(){
+    //TODO: Hacer funcion para resolver la operacion ingresada. Primero verificar si no hay errores en la expresion.
+  }
+
+  void asigAns() {
+    //TODO: Hacer funcion para asignar y recuperar la respuesta anterior.
+  }
+
+  void borrarExp() {
+    //TODO: Hacer funcion para solo borrar una exprecion o unidad de la operacion actual.
+  }
+
 }
