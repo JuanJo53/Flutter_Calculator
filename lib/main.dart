@@ -31,7 +31,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String resultado="";
   String prevRes="";
   String expresion="";
-
+  int openController=0;
+  int closeController=0;
   TextEditingController expArt = TextEditingController();
   TextEditingController numReal = TextEditingController();
   @override
@@ -161,8 +162,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 operacion="";
                 prevRes=resultado;
                 resultado="";
+                openController=0;
+                closeController=0;
               }else if(msg=='='){
-                solucionar();
+                if(closeController==openController){
+                  solucionar();
+                }else{
+                  resultado='Syntax Error';
+                }
               }else if(msg=='Ans'){
                 //TODO: Mejorar para poder usar con funciones complejas.
                 operacion=msg;
@@ -173,6 +180,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   operacion=operacion.substring(0,operacion.length-2);
                 }else if(operacion.substring(operacion.length-1)!="(" && operacion!=""){
                   operacion=operacion.substring(0,operacion.length-1);
+                }else if(operacion.substring(operacion.length-1)=="("){
+                  operacion=operacion.substring(0,operacion.length-1);
+                  openController--;
+                  print(openController);
+                }else if(operacion.substring(operacion.length-1)==")"){
+                  operacion=operacion.substring(0,operacion.length-1);
+                  closeController--;
+                  print(closeController);
                 }
               }else{
                 operacion+=msg;
@@ -192,8 +207,15 @@ class _MyHomePageState extends State<MyHomePage> {
             setState(() {
               if (msg=='sin'||msg=='cos'||msg=='tan'||msg=='log'||msg=='ln'||msg=='√'){
                   operacion+=msg+"(";
+                  openController++;
               }else if(msg=='INV'){
                 changeINVfunctions();
+              }else if(msg=='('){
+                operacion+=msg;
+                openController++;
+              }else if(msg==')'){
+                operacion+=msg;
+                closeController++;
               }else{
                 operacion+=msg;
               }
@@ -210,6 +232,8 @@ class _MyHomePageState extends State<MyHomePage> {
     expresion=expresion.replaceAll('÷', '/');
     expresion=expresion.replaceAll('π',math.pi.toString());
     expresion=expresion.replaceAll('e',math.e.toString());
+    expresion=expresion.replaceAll('√(','sqrt(');
+    expresion=expresion.replaceAll('log(','log(10,');
     expresion=expresion.replaceAll('Ans', prevRes);
     try{
       Parser p = Parser();
