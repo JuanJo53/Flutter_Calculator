@@ -24,9 +24,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _parentesisA = 0;
-  int _parentesisC = 0;
   String operacion="";
+  String resultado="";
+  String expresion="";
 
   TextEditingController expArt = TextEditingController();
   TextEditingController numReal = TextEditingController();
@@ -160,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
               }else if(msg=='Ans'){
                 asigAns();
               }else if(msg=='DEL'){
-                borrarExp();
+                operacion=operacion.substring(0,operacion.length-1);
               }else{
                 operacion+=msg;
               }
@@ -179,7 +179,6 @@ class _MyHomePageState extends State<MyHomePage> {
             setState(() {
               if (msg=='sin'||msg=='cos'||msg=='tan'||msg=='log'||msg=='ln'||msg=='√'){
                   operacion+=msg+"(";
-                  _parentesisA++;
               }else if(msg=='INV'){
 
               }else{
@@ -198,9 +197,4 @@ class _MyHomePageState extends State<MyHomePage> {
   void asigAns() {
     //TODO: Hacer funcion para asignar y recuperar la respuesta anterior.
   }
-
-  void borrarExp() {
-    //TODO: Hacer funcion para solo borrar una exprecion o unidad de la operacion actual.
-  }
-
 }
