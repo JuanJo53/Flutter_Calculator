@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
+import 'dart:math' as math;
 
 void main() => runApp(MyApp());
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -26,6 +29,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String operacion="";
   String resultado="";
+  String prevRes="";
   String expresion="";
 
   TextEditingController expArt = TextEditingController();
@@ -48,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
               enabled: false,
             ),
             TextField(
-              controller: numReal,
+              controller: numReal=TextEditingController(text: resultado),
               textAlign: TextAlign.right,
               style: TextStyle(
                 fontSize: 20.0,
@@ -121,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                 Digito('0'),
                 Digito('.'),
-                Digito(''),
+                Digito('00'),
                 funcionBasica('Ans'),
                 funcionBasica('='),
               ],
@@ -155,12 +159,21 @@ class _MyHomePageState extends State<MyHomePage> {
             setState(() {
               if(msg=="AC"){
                 operacion="";
+                prevRes=resultado;
+                resultado="";
               }else if(msg=='='){
                 solucionar();
               }else if(msg=='Ans'){
-                asigAns();
+                //TODO: Mejorar para poder usar con funciones complejas.
+                operacion=msg;
               }else if(msg=='DEL'){
-                operacion=operacion.substring(0,operacion.length-1);
+                if(operacion==""){
+                  print("Operacion Vacia");
+                }else if(operacion.substring(operacion.length-1)=="(" && operacion!=""){
+                  operacion=operacion.substring(0,operacion.length-2);
+                }else if(operacion.substring(operacion.length-1)!="(" && operacion!=""){
+                  operacion=operacion.substring(0,operacion.length-1);
+                }
               }else{
                 operacion+=msg;
               }
@@ -180,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
               if (msg=='sin'||msg=='cos'||msg=='tan'||msg=='log'||msg=='ln'||msg=='√'){
                   operacion+=msg+"(";
               }else if(msg=='INV'){
-
+                changeINVfunctions();
               }else{
                 operacion+=msg;
               }
@@ -192,9 +205,23 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   void solucionar(){
     //TODO: Hacer funcion para resolver la operacion ingresada. Primero verificar si no hay errores en la expresion.
+    expresion=operacion;
+    expresion=expresion.replaceAll('×', '*');
+    expresion=expresion.replaceAll('÷', '/');
+    expresion=expresion.replaceAll('π',math.pi.toString());
+    expresion=expresion.replaceAll('e',math.e.toString());
+    expresion=expresion.replaceAll('Ans', prevRes);
+    try{
+      Parser p = Parser();
+      Expression exp = p.parse(expresion);
+      ContextModel cm = ContextModel();
+      resultado='${exp.evaluate(EvaluationType.REAL, cm)}';
+      prevRes=resultado;
+    }catch(e){
+      resultado="Error: "+e;
+    }
   }
-
-  void asigAns() {
-    //TODO: Hacer funcion para asignar y recuperar la respuesta anterior.
+  void changeINVfunctions(){
+    //TODO: Hacer funcion que habilite las funciones inversas.
   }
 }
