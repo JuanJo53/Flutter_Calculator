@@ -204,19 +204,21 @@ class _MyHomePageState extends State<MyHomePage> {
       child: FlatButton(
           onPressed: (){
             setState(() {
-              if (msg=='sin'||msg=='cos'||msg=='tan'||msg=='log'||msg=='ln'||msg=='√'||msg=='∛'){
+              if(msg==')'&&openController>closeController){
+               operacion+=msg;
+               closeController++;
+              }else{
+                if (msg=='sin'||msg=='cos'||msg=='tan'||msg=='log'||msg=='ln'||msg=='√'||msg=='∛'){
                   operacion+=msg+"(";
                   openController++;
-              }else if(msg=='INV'){
-                changeINVfunctions();
-              }else if(msg=='('){
-                operacion+=msg;
-                openController++;
-              }else if(msg==')'&&openController>=closeController){
-                operacion+=msg;
-                closeController++;
-              }else{
-                operacion+=msg;
+                }else if(msg=='INV'){
+                  changeINVfunctions();
+                }else if(msg=='('){
+                  operacion+=msg;
+                  openController++;
+                }else if(msg!=')'){
+                  operacion+=msg;
+                }
               }
             });
           },
