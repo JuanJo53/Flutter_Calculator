@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
@@ -78,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 funcionAvanzada('ln'),
                 funcionAvanzada('log'),
                 funcionAvanzada('√'),
-                funcionAvanzada('^'),
+                funcionAvanzada('³'),
               ],
             ),
             Row(
@@ -88,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 funcionAvanzada('e'),
                 funcionAvanzada('('),
                 funcionAvanzada(')'),
-                funcionAvanzada('!'),
+                funcionAvanzada('^'),
               ],
             ),
             Row(
@@ -165,23 +163,32 @@ class _MyHomePageState extends State<MyHomePage> {
       child: FlatButton(
           onPressed: (){
             setState(() {
-              if(!operacion.isEmpty || msg=='Ans'){
-                if(msg=="AC"){
-                  operacion="";
-                  prevRes=resultado;
-                  resultado="";
-                  openController=0;
-                  closeController=0;
-                }else if(msg=='='){
-                  if(closeController==openController){
-                    solucionar();
+              if(msg=='Ans'&&!prevRes.isEmpty){
+                operacion+=msg;
+              }else{
+                if(!operacion.isEmpty){
+                  if(msg=="AC"){
+                    operacion="";
+                    prevRes=resultado;
+                    resultado="";
+                    openController=0;
+                    closeController=0;
+                  }else if(msg=='='){
+                    if(closeController==openController){
+                      solucionar();
+                    }else{
+                      resultado='Syntax Error';
+                    }
+                  }else if(msg=='DEL'){
+                    DELfunction(msg);
+                    print("abiertos: "+openController.toString());
+                    print("cerrados: "+closeController.toString());
                   }else{
-                    resultado='Syntax Error';
+                    if(msg!='Ans')
+                      operacion+=msg;
                   }
-                }else if(msg=='DEL'){
-                  DELfunction(msg);
                 }else{
-                  operacion+=msg;
+                  print("Operacion Vacia");
                 }
               }
             });
@@ -218,23 +225,45 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
   void DELfunction(String msg){
-    if(operacion==""){
-      print("Operacion Vacia");
-      print(openController);
-      print(closeController);
-    }else if(operacion.substring(operacion.length-1)=="("&&operacion.substring(operacion.length-2)=="n"&&operacion.substring(operacion.length-3)=="l"){
-      operacion=operacion.substring(0,operacion.length-3);
-      openController--;
-    }else if(operacion.substring(operacion.length-1)!="("){
-      operacion=operacion.substring(0,operacion.length-1);
-    }else if(operacion.substring(operacion.length-1)=="("){
-      operacion=operacion.substring(0,operacion.length-1);
-      openController--;
-      print(openController);
-    }else if(operacion.substring(operacion.length-1)==")"){
-      operacion=operacion.substring(0,operacion.length-1);
-      closeController--;
-      print(closeController);
+    int tamOperacion=operacion.length;
+    if(tamOperacion<=2){
+      if(operacion.substring(tamOperacion-1)=='('){
+        if(operacion.substring(tamOperacion-2)!='√(') {
+          operacion = operacion.substring(0, operacion.length - 2);
+          openController--;
+        }else{
+          operacion=operacion.substring(0,operacion.length-1);
+          openController--;
+        }
+      }else if(operacion.substring(tamOperacion-1)==')') {
+        operacion = operacion.substring(0, operacion.length - 1);
+        closeController--;
+      }else{
+        operacion=operacion.substring(0,operacion.length-1);
+      }
+    }else{
+      if(operacion.substring(tamOperacion-1)=='('){
+        if(operacion.substring(tamOperacion-3)=='ln('){
+          operacion=operacion.substring(0,operacion.length-3);
+          openController--;
+        }else if(operacion.substring(tamOperacion-2)=='√(') {
+          operacion = operacion.substring(0, operacion.length - 2);
+          openController--;
+        }else if(operacion.substring(tamOperacion-4)=='log('||operacion.substring(tamOperacion-4)=='cos('
+            ||operacion.substring(tamOperacion-4)=='sin('||operacion.substring(tamOperacion-4)=='tan('){
+          operacion=operacion.substring(0,operacion.length-4);
+          openController--;
+        }else {
+          operacion=operacion.substring(0,operacion.length-1);
+        }
+      }else if(operacion.substring(tamOperacion-1)==')'){
+        operacion=operacion.substring(0,operacion.length-1);
+        closeController--;
+      }else if(operacion.substring(tamOperacion-3)=='Ans'){
+          operacion=operacion.substring(0,operacion.length-3);
+      }else{
+        operacion=operacion.substring(0,operacion.length-1);
+      }
     }
   }
   void solucionar(){
