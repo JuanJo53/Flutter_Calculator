@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 funcionAvanzada('INV'),
-                funcionAvanzada('DEG'),
+                funcionAvanzada('½'),
                 funcionAvanzada('sin'),
                 funcionAvanzada('cos'),
                 funcionAvanzada('tan'),
@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 funcionAvanzada('ln'),
                 funcionAvanzada('log'),
                 funcionAvanzada('√'),
-                funcionAvanzada('³'),
+                funcionAvanzada('∛'),
               ],
             ),
             Row(
@@ -204,7 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
       child: FlatButton(
           onPressed: (){
             setState(() {
-              if (msg=='sin'||msg=='cos'||msg=='tan'||msg=='log'||msg=='ln'||msg=='√'){
+              if (msg=='sin'||msg=='cos'||msg=='tan'||msg=='log'||msg=='ln'||msg=='√'||msg=='∛'){
                   operacion+=msg+"(";
                   openController++;
               }else if(msg=='INV'){
@@ -212,7 +212,7 @@ class _MyHomePageState extends State<MyHomePage> {
               }else if(msg=='('){
                 operacion+=msg;
                 openController++;
-              }else if(msg==')'){
+              }else if(msg==')'&&openController>=closeController){
                 operacion+=msg;
                 closeController++;
               }else{
@@ -226,27 +226,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   void DELfunction(String msg){
     int tamOperacion=operacion.length;
-    if(tamOperacion<=2){
-      if(operacion.substring(tamOperacion-1)=='('){
-        if(operacion.substring(tamOperacion-2)!='√(') {
-          operacion = operacion.substring(0, operacion.length - 2);
-          openController--;
-        }else{
-          operacion=operacion.substring(0,operacion.length-1);
-          openController--;
-        }
-      }else if(operacion.substring(tamOperacion-1)==')') {
-        operacion = operacion.substring(0, operacion.length - 1);
-        closeController--;
-      }else{
-        operacion=operacion.substring(0,operacion.length-1);
-      }
-    }else{
+    print("tamaño: "+tamOperacion.toString());
+    if(tamOperacion>5){
       if(operacion.substring(tamOperacion-1)=='('){
         if(operacion.substring(tamOperacion-3)=='ln('){
           operacion=operacion.substring(0,operacion.length-3);
           openController--;
-        }else if(operacion.substring(tamOperacion-2)=='√(') {
+        }else if(operacion.substring(tamOperacion-2)=='√('||operacion.substring(tamOperacion-2)=='∛(') {
           operacion = operacion.substring(0, operacion.length - 2);
           openController--;
         }else if(operacion.substring(tamOperacion-4)=='log('||operacion.substring(tamOperacion-4)=='cos('
@@ -260,7 +246,73 @@ class _MyHomePageState extends State<MyHomePage> {
         operacion=operacion.substring(0,operacion.length-1);
         closeController--;
       }else if(operacion.substring(tamOperacion-3)=='Ans'){
-          operacion=operacion.substring(0,operacion.length-3);
+        operacion=operacion.substring(0,operacion.length-3);
+      }else{
+        operacion=operacion.substring(0,operacion.length-1);
+      }
+    }else if(tamOperacion==5){
+      if(operacion.substring(tamOperacion-1)=='('){
+        operacion=operacion.substring(0,operacion.length-1);
+        openController--;
+      }else if(operacion.substring(tamOperacion-1)==')'){
+        operacion=operacion.substring(0,operacion.length-1);
+        closeController--;
+      }else{
+        operacion=operacion.substring(0,operacion.length-1);
+      }
+    }else if(tamOperacion==4){
+      if(operacion.substring(tamOperacion-4)=='log('||operacion.substring(tamOperacion-4)=='cos('
+          ||operacion.substring(tamOperacion-4)=='sin('||operacion.substring(tamOperacion-4)=='tan('){
+        operacion=operacion.substring(0,operacion.length-4);
+        openController--;
+      }else {
+        if(operacion.substring(tamOperacion-1)=='('){
+          operacion=operacion.substring(0,operacion.length-1);
+          openController--;
+        }else if(operacion.substring(tamOperacion-1)==')'){
+          operacion=operacion.substring(0,operacion.length-1);
+          closeController--;
+        }else{
+          operacion=operacion.substring(0,operacion.length-1);
+        }
+      }
+    }else if(tamOperacion==3){
+      if(operacion.substring(tamOperacion-3)=='ln('){
+        operacion=operacion.substring(0,operacion.length-3);
+        openController--;
+      }else{
+        if(operacion.substring(tamOperacion-1)=='('){
+          operacion=operacion.substring(0,operacion.length-1);
+          openController--;
+        }else if(operacion.substring(tamOperacion-1)==')'){
+          operacion=operacion.substring(0,operacion.length-1);
+          closeController--;
+        }else{
+          operacion=operacion.substring(0,operacion.length-1);
+        }
+      }
+    }else if(tamOperacion==2){
+      if(operacion.substring(tamOperacion-2)=='√('||operacion.substring(tamOperacion-2)=='∛(') {
+        operacion = operacion.substring(0, operacion.length - 2);
+        openController--;
+      }else{
+        if(operacion.substring(tamOperacion-1)=='('){
+          operacion=operacion.substring(0,operacion.length-1);
+          openController--;
+        }else if(operacion.substring(tamOperacion-1)==')'){
+          operacion=operacion.substring(0,operacion.length-1);
+          closeController--;
+        }else{
+          operacion=operacion.substring(0,operacion.length-1);
+        }
+      }
+    }else{
+      if(operacion.substring(tamOperacion-1)=='('){
+        operacion=operacion.substring(0,operacion.length-1);
+        openController--;
+      }else if(operacion.substring(tamOperacion-1)==')'){
+        operacion=operacion.substring(0,operacion.length-1);
+        closeController--;
       }else{
         operacion=operacion.substring(0,operacion.length-1);
       }
@@ -269,15 +321,18 @@ class _MyHomePageState extends State<MyHomePage> {
   void solucionar(){
     //TODO: Hacer funcion para resolver la operacion ingresada. Primero verificar si no hay errores en la expresion.
     expresion=operacion;
+    expresion=expresion.replaceAll('½','1/2');
     expresion=expresion.replaceAll('×', '*');
     expresion=expresion.replaceAll('×+', '*');
     expresion=expresion.replaceAll('÷', '/');
     expresion=expresion.replaceAll('π',math.pi.toString());
     expresion=expresion.replaceAll('e',math.e.toString());
+    expresion=expresion.replaceAll('∛(','nrt(3,');
     expresion=expresion.replaceAll('√(','sqrt(');
     expresion=expresion.replaceAll('log(','log(10,');
     expresion=expresion.replaceAll(')(',')*(');
     expresion=expresion.replaceAll('Ans', prevRes);
+    print(expresion);
     try{
       Parser p = Parser();
       Expression exp = p.parse(expresion);
@@ -290,6 +345,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
   void changeINVfunctions(){
-    //TODO: Hacer funcion que habilite las funciones inversas.
+    //TODO: Hacer funcion que habilite las funciones inversas. Usar esto: ⁻¹
   }
 }
