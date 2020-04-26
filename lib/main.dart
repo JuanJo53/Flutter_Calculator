@@ -44,6 +44,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String sqrt='√';
   String cube='∛';
 
+  bool focus=false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,31 +75,31 @@ class _MyHomePageState extends State<MyHomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                funcionAvanzada('INV'),
-                funcionAvanzada('½'),
-                funcionAvanzada(sen),
-                funcionAvanzada(cos),
-                funcionAvanzada(tan),
+                funcionAvanzada('INV',focus),
+                funcionAvanzada('½',false),
+                funcionAvanzada(sen,false),
+                funcionAvanzada(cos,false),
+                funcionAvanzada(tan,false),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                funcionAvanzada('%'),
-                funcionAvanzada('ln'),
-                funcionAvanzada('log'),
-                funcionAvanzada(sqrt),
-                funcionAvanzada(cube),
+                funcionAvanzada('%',false),
+                funcionAvanzada('ln',false),
+                funcionAvanzada('log',false),
+                funcionAvanzada(sqrt,false),
+                funcionAvanzada(cube,false),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                funcionAvanzada('π'),
-                funcionAvanzada('e'),
-                funcionAvanzada('('),
-                funcionAvanzada(')'),
-                funcionAvanzada('^'),
+                funcionAvanzada('π',false),
+                funcionAvanzada('e',false),
+                funcionAvanzada('(',false),
+                funcionAvanzada(')',false),
+                funcionAvanzada('^',false),
               ],
             ),
             Row(
@@ -208,7 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-  Widget funcionAvanzada(msg){
+  Widget funcionAvanzada(msg,bool focus){
     return Container(
       width: 72.0,
       color: Colors.cyan,
@@ -219,7 +221,7 @@ class _MyHomePageState extends State<MyHomePage> {
                operacion+=msg;
                closeController++;
               }else{
-                if (msg=='sin'||msg=='cos'||msg=='tan'||msg=='log'||msg=='ln'||msg=='√'||msg=='∛'){
+                if (msg=='tan⁻¹'||msg=='cos⁻¹'||msg=='sin⁻¹'||msg=='sin'||msg=='cos'||msg=='tan'||msg=='log'||msg=='ln'||msg=='√'||msg=='∛'){
                   operacion+=msg+"(";
                   openController++;
                 }else if(msg=='INV'){
@@ -227,13 +229,24 @@ class _MyHomePageState extends State<MyHomePage> {
                 }else if(msg=='('){
                   operacion+=msg;
                   openController++;
+                }else if(msg=='x²'){
+                  if(!operacion.isEmpty){
+                    operacion+='^2';
+                  }
+                }else if(msg=='x³'){
+                  if(!operacion.isEmpty){
+                    operacion+='^3';
+                  }
                 }else if(msg!=')'){
                   operacion+=msg;
                 }
               }
             });
           },
-          child: Text(msg,style: TextStyle(fontSize: 17.0,color: Colors.white),)
+          child: Text(msg,style: TextStyle(fontSize: 17.0,color: Colors.white,),),
+          splashColor: Colors.blueAccent,
+          focusColor: Colors.amberAccent,
+          autofocus: focus,
       ),
     );
   }
@@ -252,8 +265,20 @@ class _MyHomePageState extends State<MyHomePage> {
             ||operacion.substring(tamOperacion-4)=='sin('||operacion.substring(tamOperacion-4)=='tan('){
           operacion=operacion.substring(0,operacion.length-4);
           openController--;
-        }else {
-          operacion=operacion.substring(0,operacion.length-1);
+        }else if(operacion.substring(tamOperacion-5)=='os⁻¹('||operacion.substring(tamOperacion-5)=='in⁻¹('
+            ||operacion.substring(tamOperacion-5)=='an⁻¹('){
+          operacion=operacion.substring(0,operacion.length-6);
+          openController--;
+        }else{
+          if(operacion.substring(tamOperacion-1)=='('){
+            operacion=operacion.substring(0,operacion.length-1);
+            openController--;
+          }else if(operacion.substring(tamOperacion-1)==')'){
+            operacion=operacion.substring(0,operacion.length-1);
+            closeController--;
+          }else{
+            operacion=operacion.substring(0,operacion.length-1);
+          }
         }
       }else if(operacion.substring(tamOperacion-1)==')'){
         operacion=operacion.substring(0,operacion.length-1);
@@ -264,14 +289,20 @@ class _MyHomePageState extends State<MyHomePage> {
         operacion=operacion.substring(0,operacion.length-1);
       }
     }else if(tamOperacion==5){
-      if(operacion.substring(tamOperacion-1)=='('){
-        operacion=operacion.substring(0,operacion.length-1);
+      if(operacion.substring(tamOperacion-5)=='os⁻¹('||operacion.substring(tamOperacion-5)=='in⁻¹('
+          ||operacion.substring(tamOperacion-5)=='an⁻¹('){
+        operacion=operacion.substring(0,operacion.length-6);
         openController--;
-      }else if(operacion.substring(tamOperacion-1)==')'){
-        operacion=operacion.substring(0,operacion.length-1);
-        closeController--;
       }else{
-        operacion=operacion.substring(0,operacion.length-1);
+        if(operacion.substring(tamOperacion-1)=='('){
+          operacion=operacion.substring(0,operacion.length-1);
+          openController--;
+        }else if(operacion.substring(tamOperacion-1)==')'){
+          operacion=operacion.substring(0,operacion.length-1);
+          closeController--;
+        }else{
+          operacion=operacion.substring(0,operacion.length-1);
+        }
       }
     }else if(tamOperacion==4){
       if(operacion.substring(tamOperacion-4)=='log('||operacion.substring(tamOperacion-4)=='cos('
@@ -345,6 +376,9 @@ class _MyHomePageState extends State<MyHomePage> {
     expresion=expresion.replaceAll('log(','log(10,');
     expresion=expresion.replaceAll(')(',')*(');
     expresion=expresion.replaceAll('Ans', prevRes);
+    expresion=expresion.replaceAll('sin⁻¹(', 'arcsin(');
+    expresion=expresion.replaceAll('cos⁻¹(', 'arccos(');
+    expresion=expresion.replaceAll('tan⁻¹(', 'arctan(');
     print(expresion);
     try{
       Parser p = Parser();
@@ -365,6 +399,7 @@ class _MyHomePageState extends State<MyHomePage> {
       tan='tan';
       sqrt='√';
       cube='∛';
+      focus=false;
     }else{
       invEnabled=true;
       sen='sin⁻¹';
@@ -372,6 +407,7 @@ class _MyHomePageState extends State<MyHomePage> {
       tan='tan⁻¹';
       sqrt='x²';
       cube='x³';
+      focus=true;
     }
   }
 }
