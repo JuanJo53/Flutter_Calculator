@@ -143,8 +143,15 @@ class _MyHomePageState extends State<MyHomePage> {
       child: FlatButton(
           onPressed: (){
             setState(() {
-              //TODO: Controlar el punto.
-              operacion+=msg;
+              if(msg=='.'){
+                if(operacion.isEmpty){
+                  operacion+=msg;
+                }else if(operacion.substring(operacion.length-1)!="."){
+                  operacion+=msg;
+                }
+              }else{
+                operacion+=msg;
+              }
             });
           },
           child: Text(msg,style: TextStyle(fontSize: 20.0,color: Colors.white),)
@@ -158,39 +165,24 @@ class _MyHomePageState extends State<MyHomePage> {
       child: FlatButton(
           onPressed: (){
             setState(() {
-              if(msg=="AC"){
-                operacion="";
-                prevRes=resultado;
-                resultado="";
-                openController=0;
-                closeController=0;
-              }else if(msg=='='){
-                if(closeController==openController){
-                  solucionar();
+              if(!operacion.isEmpty || msg=='Ans'){
+                if(msg=="AC"){
+                  operacion="";
+                  prevRes=resultado;
+                  resultado="";
+                  openController=0;
+                  closeController=0;
+                }else if(msg=='='){
+                  if(closeController==openController){
+                    solucionar();
+                  }else{
+                    resultado='Syntax Error';
+                  }
+                }else if(msg=='DEL'){
+                  DELfunction(msg);
                 }else{
-                  resultado='Syntax Error';
+                  operacion+=msg;
                 }
-              }else if(msg=='Ans'){
-                //TODO: Mejorar para poder usar con funciones complejas.
-                operacion=msg;
-              }else if(msg=='DEL'){
-                if(operacion==""){
-                  print("Operacion Vacia");
-                }else if(operacion.substring(operacion.length-1)=="(" && operacion!=""){
-                  operacion=operacion.substring(0,operacion.length-2);
-                }else if(operacion.substring(operacion.length-1)!="(" && operacion!=""){
-                  operacion=operacion.substring(0,operacion.length-1);
-                }else if(operacion.substring(operacion.length-1)=="("){
-                  operacion=operacion.substring(0,operacion.length-1);
-                  openController--;
-                  print(openController);
-                }else if(operacion.substring(operacion.length-1)==")"){
-                  operacion=operacion.substring(0,operacion.length-1);
-                  closeController--;
-                  print(closeController);
-                }
-              }else{
-                operacion+=msg;
               }
             });
           },
@@ -225,19 +217,42 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+  void DELfunction(String msg){
+    if(operacion==""){
+      print("Operacion Vacia");
+      print(openController);
+      print(closeController);
+    }else if(operacion.substring(operacion.length-1)=="("&&operacion.substring(operacion.length-2)=="n"&&operacion.substring(operacion.length-3)=="l"){
+      operacion=operacion.substring(0,operacion.length-3);
+      openController--;
+    }else if(operacion.substring(operacion.length-1)!="("){
+      operacion=operacion.substring(0,operacion.length-1);
+    }else if(operacion.substring(operacion.length-1)=="("){
+      operacion=operacion.substring(0,operacion.length-1);
+      openController--;
+      print(openController);
+    }else if(operacion.substring(operacion.length-1)==")"){
+      operacion=operacion.substring(0,operacion.length-1);
+      closeController--;
+      print(closeController);
+    }
+  }
   void solucionar(){
     //TODO: Hacer funcion para resolver la operacion ingresada. Primero verificar si no hay errores en la expresion.
     expresion=operacion;
     expresion=expresion.replaceAll('×', '*');
+    expresion=expresion.replaceAll('×+', '*');
     expresion=expresion.replaceAll('÷', '/');
     expresion=expresion.replaceAll('π',math.pi.toString());
     expresion=expresion.replaceAll('e',math.e.toString());
     expresion=expresion.replaceAll('√(','sqrt(');
     expresion=expresion.replaceAll('log(','log(10,');
+    expresion=expresion.replaceAll(')(',')*(');
     expresion=expresion.replaceAll('Ans', prevRes);
     try{
       Parser p = Parser();
       Expression exp = p.parse(expresion);
+      print(exp.simplify());
       ContextModel cm = ContextModel();
       resultado='${exp.evaluate(EvaluationType.REAL, cm)}';
       prevRes=resultado;
