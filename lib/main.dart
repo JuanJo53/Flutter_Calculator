@@ -29,10 +29,21 @@ class _MyHomePageState extends State<MyHomePage> {
   String resultado="";
   String prevRes="";
   String expresion="";
+
   int openController=0;
   int closeController=0;
+
   TextEditingController expArt = TextEditingController();
   TextEditingController numReal = TextEditingController();
+
+  bool invEnabled=false;
+
+  String sen='sin';
+  String cos='cos';
+  String tan='tan';
+  String sqrt='√';
+  String cube='∛';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,9 +75,9 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                 funcionAvanzada('INV'),
                 funcionAvanzada('½'),
-                funcionAvanzada('sin'),
-                funcionAvanzada('cos'),
-                funcionAvanzada('tan'),
+                funcionAvanzada(sen),
+                funcionAvanzada(cos),
+                funcionAvanzada(tan),
               ],
             ),
             Row(
@@ -75,8 +86,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 funcionAvanzada('%'),
                 funcionAvanzada('ln'),
                 funcionAvanzada('log'),
-                funcionAvanzada('√'),
-                funcionAvanzada('∛'),
+                funcionAvanzada(sqrt),
+                funcionAvanzada(cube),
               ],
             ),
             Row(
@@ -222,7 +233,7 @@ class _MyHomePageState extends State<MyHomePage> {
               }
             });
           },
-          child: Text(msg,style: TextStyle(fontSize: 20.0,color: Colors.white),)
+          child: Text(msg,style: TextStyle(fontSize: 17.0,color: Colors.white),)
       ),
     );
   }
@@ -347,6 +358,20 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
   void changeINVfunctions(){
-    //TODO: Hacer funcion que habilite las funciones inversas. Usar esto: ⁻¹
+    if(invEnabled){
+      invEnabled=false;
+      sen='sin';
+      cos='cos';
+      tan='tan';
+      sqrt='√';
+      cube='∛';
+    }else{
+      invEnabled=true;
+      sen='sin⁻¹';
+      cos='cos⁻¹';
+      tan='tan⁻¹';
+      sqrt='x²';
+      cube='x³';
+    }
   }
 }
