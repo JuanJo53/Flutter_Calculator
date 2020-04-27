@@ -48,6 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Size sizeScreen = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -75,71 +76,71 @@ class _MyHomePageState extends State<MyHomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                funcionAvanzada('INV',focus),
-                funcionAvanzada('½',false),
-                funcionAvanzada(sen,false),
-                funcionAvanzada(cos,false),
-                funcionAvanzada(tan,false),
+                INVbtn('INV',sizeScreen),
+                funcionAvanzada('½',sizeScreen),
+                funcionAvanzada(sen,sizeScreen),
+                funcionAvanzada(cos,sizeScreen),
+                funcionAvanzada(tan,sizeScreen),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                funcionAvanzada('%',false),
-                funcionAvanzada('ln',false),
-                funcionAvanzada('log',false),
-                funcionAvanzada(sqrt,false),
-                funcionAvanzada(cube,false),
+                funcionAvanzada('%',sizeScreen),
+                funcionAvanzada('ln',sizeScreen),
+                funcionAvanzada('log',sizeScreen),
+                funcionAvanzada(sqrt,sizeScreen),
+                funcionAvanzada(cube,sizeScreen),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                funcionAvanzada('π',false),
-                funcionAvanzada('e',false),
-                funcionAvanzada('(',false),
-                funcionAvanzada(')',false),
-                funcionAvanzada('^',false),
+                funcionAvanzada('π',sizeScreen),
+                funcionAvanzada('e',sizeScreen),
+                funcionAvanzada('(',sizeScreen),
+                funcionAvanzada(')',sizeScreen),
+                funcionAvanzada('^',sizeScreen),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Digito('7'),
-                Digito('8'),
-                Digito('9'),
-                funcionBasica('DEL'),
-                funcionBasica('AC'),
+                Digito('7',sizeScreen),
+                Digito('8',sizeScreen),
+                Digito('9',sizeScreen),
+                funcionBasica('DEL',sizeScreen),
+                funcionBasica('AC',sizeScreen),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Digito('4'),
-                Digito('5'),
-                Digito('6'),
-                funcionBasica('×'),
-                funcionBasica('÷'),
+                Digito('4',sizeScreen),
+                Digito('5',sizeScreen),
+                Digito('6',sizeScreen),
+                funcionBasica('×',sizeScreen),
+                funcionBasica('÷',sizeScreen),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Digito('1'),
-                Digito('2'),
-                Digito('3'),
-                funcionBasica('+'),
-                funcionBasica('-'),
+                Digito('1',sizeScreen),
+                Digito('2',sizeScreen),
+                Digito('3',sizeScreen),
+                funcionBasica('+',sizeScreen),
+                funcionBasica('-',sizeScreen),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Digito('0'),
-                Digito('.'),
-                Digito('00'),
-                funcionBasica('Ans'),
-                funcionBasica('='),
+                Digito('0',sizeScreen),
+                Digito('.',sizeScreen),
+                Digito('00',sizeScreen),
+                funcionBasica('Ans',sizeScreen),
+                funcionBasica('=',sizeScreen),
               ],
             )
           ],
@@ -147,9 +148,9 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-  Widget Digito(msg){
+  Widget Digito(msg,sizeScreen){
     return Container(
-      width:72.0,
+      width:sizeScreen.width/5,
       color: Colors.black54,
       child: FlatButton(
           onPressed: (){
@@ -169,9 +170,9 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-  Widget funcionBasica(msg){
+  Widget funcionBasica(msg,sizeScreen){
     return Container(
-      width:72.0,
+      width:sizeScreen.width/5,
       color: Colors.black54,
       child: FlatButton(
           onPressed: (){
@@ -214,11 +215,11 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-  Widget funcionAvanzada(msg,bool focus){
+  Widget funcionAvanzada(msg,sizeScreen){
     return Container(
-      width: 72.0,
+      width: sizeScreen.width/5,
       color: Colors.cyan,
-      child: FlatButton(
+      child: RawMaterialButton(
           onPressed: (){
             setState(() {
               if(msg==')'&&openController>closeController){
@@ -228,8 +229,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 if (msg=='tan⁻¹'||msg=='cos⁻¹'||msg=='sin⁻¹'||msg=='sin'||msg=='cos'||msg=='tan'||msg=='log'||msg=='ln'||msg=='√'||msg=='∛'){
                   operacion+=msg+"(";
                   openController++;
-                }else if(msg=='INV'){
-                  changeINVfunctions();
                 }else if(msg=='('){
                   operacion+=msg;
                   openController++;
@@ -250,7 +249,22 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Text(msg,style: TextStyle(fontSize: 17.0,color: Colors.white,),),
           splashColor: Colors.blueAccent,
           focusColor: Colors.amberAccent,
-          autofocus: focus,
+      ),
+    );
+  }
+  Widget INVbtn(msg,Size sizeScreen){
+    return Container(
+      width: sizeScreen.width/5,
+      color: focus ? Colors.blue :Colors.cyan,
+      child: RawMaterialButton(
+        onPressed: (){
+          setState(() {
+            changeINVfunctions();
+          });
+        },
+        child: Text(msg,style: TextStyle(fontSize: 17.0,color: Colors.white,),),
+        splashColor: Colors.blueAccent,
+        focusColor: Colors.amberAccent,
       ),
     );
   }
@@ -367,7 +381,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
   void solucionar(){
-    //TODO: Hacer funcion para resolver la operacion ingresada. Primero verificar si no hay errores en la expresion.
     expresion=operacion;
     expresion=expresion.replaceAll('½','1/2');
     expresion=expresion.replaceAll('×', '*');
