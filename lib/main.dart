@@ -176,33 +176,37 @@ class _MyHomePageState extends State<MyHomePage> {
       child: FlatButton(
           onPressed: (){
             setState(() {
-              if(msg=='Ans'&&!prevRes.isEmpty){
-                operacion+=msg;
-              }else{
-                if(!operacion.isEmpty){
-                  if(msg=="AC"){
-                    operacion="";
-                    prevRes=resultado;
-                    resultado="";
-                    openController=0;
-                    closeController=0;
-                  }else if(msg=='='){
-                    if(closeController==openController){
-                      solucionar();
-                    }else{
-                      resultado='Syntax Error';
-                    }
-                  }else if(msg=='DEL'){
-                    DELfunction(msg);
-                    print("abiertos: "+openController.toString());
-                    print("cerrados: "+closeController.toString());
-                  }else{
-                    if(msg!='Ans')
-                      operacion+=msg;
-                  }
+              try{
+                if(msg=='Ans'&&!prevRes.isEmpty){
+                  operacion+=msg;
                 }else{
-                  print("Operacion Vacia");
+                  if(!operacion.isEmpty){
+                    if(msg=="AC"){
+                      operacion="";
+                      prevRes=resultado;
+                      resultado="";
+                      openController=0;
+                      closeController=0;
+                    }else if(msg=='='){
+                      if(closeController==openController){
+                        solucionar();
+                      }else{
+                        resultado='Syntax Error';
+                      }
+                    }else if(msg=='DEL'){
+                      DELfunction(msg);
+                    }else{
+                      if(msg!='Ans')
+                        operacion+=msg;
+                    }
+                  }else{
+                    print("Operacion Vacia");
+                  }
                 }
+                print("abiertos: "+openController.toString());
+                print("cerrados: "+closeController.toString());
+              }catch(e){
+                resultado='Syntax Error';
               }
             });
           },
