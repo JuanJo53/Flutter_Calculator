@@ -180,6 +180,8 @@ class _MyHomePageState extends State<MyHomePage> {
               try{
                 if(msg=='Ans'&&!prevRes.isEmpty){
                   operacion+=msg;
+                }else if(msg=='-'){
+                  operacion+=msg;
                 }else{
                   if(!operacion.isEmpty){
                     if(msg=="AC"){
@@ -318,6 +320,8 @@ class _MyHomePageState extends State<MyHomePage> {
         }else if(operacion.substring(tamOperacion-1)==')'){
           operacion=operacion.substring(0,operacion.length-1);
           closeController--;
+        }else if(operacion.substring(tamOperacion-3)=='Ans'){
+          operacion=operacion.substring(0,operacion.length-3);
         }else{
           operacion=operacion.substring(0,operacion.length-1);
         }
@@ -334,6 +338,8 @@ class _MyHomePageState extends State<MyHomePage> {
         }else if(operacion.substring(tamOperacion-1)==')'){
           operacion=operacion.substring(0,operacion.length-1);
           closeController--;
+        }else if(operacion.substring(tamOperacion-3)=='Ans'){
+          operacion=operacion.substring(0,operacion.length-3);
         }else{
           operacion=operacion.substring(0,operacion.length-1);
         }
@@ -342,6 +348,8 @@ class _MyHomePageState extends State<MyHomePage> {
       if(operacion.substring(tamOperacion-3)=='ln('){
         operacion=operacion.substring(0,operacion.length-3);
         openController--;
+      }else if(operacion.substring(tamOperacion-3)=='Ans'){
+        operacion=operacion.substring(0,operacion.length-3);
       }else{
         if(operacion.substring(tamOperacion-1)=='('){
           operacion=operacion.substring(0,operacion.length-1);
