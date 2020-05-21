@@ -176,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
       color: Colors.black54,
       child: FlatButton(
           onPressed: (){
-            setState(() {
+            setState((){
               try{
                 if(msg=='Ans'&&!prevRes.isEmpty){
                   operacion+=msg;
@@ -191,10 +191,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       openController=0;
                       closeController=0;
                     }else if(msg=='='){
-                      if(closeController==openController){
+                      if(closeController!=openController){
+                        autoParentesis(openController-closeController);
                         solucionar();
                       }else{
-                        resultado='Syntax Error';
+                        solucionar();
+//                        resultado='Syntax Error';
                       }
                     }else if(msg=='DEL'){
                       DELfunction(msg);
@@ -386,6 +388,12 @@ class _MyHomePageState extends State<MyHomePage> {
       }else{
         operacion=operacion.substring(0,operacion.length-1);
       }
+    }
+  }
+  void autoParentesis(int n){
+    for(int i=0;i<n;i++){
+      operacion+=')';
+      closeController++;
     }
   }
   void solucionar(){
